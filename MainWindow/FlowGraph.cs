@@ -4,102 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MainWindow
 {
-	internal class FlowGraph
+	internal partial class FlowGraph
 	{
-		private class AdjacencyList
+		private partial class AdjacencyList
 		{
-			public class NodeID
-			{
-				public long Value { get; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-				private NodeID()
-				{
-				}
-
-				public static NodeID GetID()
-				{
-					return new NodeID();
-				}
-			}
-
-			interface INodeInfo
-			{
-				string Name { get; }
-
-				Control Visualize();
-
-				void SetData(dynamic _);
-			}
-
-			class NodeInfoStart : INodeInfo
-			{
-				public string Name => "start point";
-
-				public Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public void SetData(dynamic _) => throw new NotImplementedException();
-			}
-
-			class NodeInfoEnd : INodeInfo
-			{
-				public string Name => "end point";
-
-				public Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public void SetData(dynamic _) => throw new NotImplementedException();
-			}
-
-			class NodeInfoLinear : INodeInfo
-			{
-				private string dialogs = "";
-
-				public string Name => "linear";
-
-				public Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public void SetData(dynamic data)
-				{
-					if (!(data is string))
-					{
-						throw new InvalidCastException();
-					}
-
-					dialogs = data;
-				}
-			}
-
-			class NodeInfoSwitch : INodeInfo
-			{
-				private List<string> options = new List<string>();
-
-				public string Name => "switch";
-
-				public Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public void SetData(dynamic data)
-				{
-					if (data is List<string>)
-					{
-						options = data;
-					}
-				}
-			}
 
 			//struct NodeInfo
 			//{
