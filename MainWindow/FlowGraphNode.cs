@@ -15,58 +15,60 @@ namespace MainWindow
 			{
 				public long Value { get; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-				private NodeID()
-				{
-				}
+				private NodeID() { }
 
 				public static NodeID GetID() => new NodeID();
 			}
 
-			interface INodeInfo
+			private abstract class NodeInfoBase
 			{
-				string Name { get; }
+				public abstract string Name { get; }
 
-				Control Visualize();
+				public abstract Control Visualize();
 
-				void SetData(dynamic _);
+				public abstract void SetData(dynamic _);
 			}
 
-			class NodeInfoStart : INodeInfo
+			class NodeInfoStart : NodeInfoBase
 			{
-				public string Name => "start point";
+				public override string Name => "起点";
 
-				public Control Visualize()
+				public override Control Visualize()
 				{
 					throw new NotImplementedException();
 				}
 
-				public void SetData(dynamic _) => throw new NotImplementedException();
+				[Obsolete("This type of node doesn't store data.")]
+#pragma warning disable CS0809 // 过时成员重写未过时成员
+				public override void SetData(dynamic _) => throw new NotImplementedException();
+#pragma warning restore CS0809 // 过时成员重写未过时成员
 			}
 
-			class NodeInfoEnd : INodeInfo
+			class NodeInfoEnd : NodeInfoBase
 			{
-				public string Name => "end point";
+				public override string Name => "终点";
+				//?
 
-				public Control Visualize()
+				public override Control Visualize()
 				{
 					throw new NotImplementedException();
 				}
 
-				public void SetData(dynamic _) => throw new NotImplementedException();
+				public override void SetData(dynamic reserved) => throw new NotImplementedException();
 			}
 
-			class NodeInfoLinear : INodeInfo
+			class NodeInfoLinear : NodeInfoBase
 			{
 				private string dialogs = "";
 
-				public string Name => "linear";
+				public override string Name => "线性";
 
-				public Control Visualize()
+				public override Control Visualize()
 				{
 					throw new NotImplementedException();
 				}
 
-				public void SetData(dynamic data)
+				public override void SetData(dynamic data)
 				{
 					if (!(data is string))
 					{
@@ -77,18 +79,18 @@ namespace MainWindow
 				}
 			}
 
-			class NodeInfoSwitch : INodeInfo
+			class NodeInfoSwitch : NodeInfoBase
 			{
 				private List<string> options = new List<string>();
 
-				public string Name => "switch";
+				public override string Name => "选择支";
 
-				public Control Visualize()
+				public override Control Visualize()
 				{
 					throw new NotImplementedException();
 				}
 
-				public void SetData(dynamic data)
+				public override void SetData(dynamic data)
 				{
 					if (!(data is List<string>))
 					{
@@ -98,6 +100,23 @@ namespace MainWindow
 					options = data;
 				}
 			}
+
+			private static readonly Dictionary<Type, NodeInfoBase> refl =
+				(from T in typeof(NodeInfoBase).Assembly.GetTypes()
+				 where T.IsSubclassOf(typeof(NodeInfoBase))
+				 select Activator.CreateInstance(T) as NodeInfoBase)
+				.ToDictionary(item => item.GetType());
+
+			public static string[] GetNodeTypeNames() => (from item in refl.Values
+														  select item.Name).ToArray();
+
+			public static Type GetNodeType(string name) => (from item in refl.Values
+															where item.Name == name
+															select item.GetType()).Single();
 		}
+
+		public static string[] GetNodeTypeNames() => AdjacencyList.GetNodeTypeNames();  // 转发调用
+
+		public static Type GetNodeType(string name) => AdjacencyList.GetNodeType(name); // 转发调用
 	}
 }

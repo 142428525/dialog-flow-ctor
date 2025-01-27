@@ -10,14 +10,14 @@ namespace FileIOClassLibrary
 	public class DialogFile : IDisposable
 	{
 		private readonly StreamWriter fs = null;
-		private bool disposed_value;    // has been disposed
+		private bool disposed_value;    // has been disposed?
 
 		public DialogFile(string path_p)
 		{
 			fs = new StreamWriter(path_p, true, Encoding.UTF8);
 		}
 
-		// TODO
+		// TODO: Lib API
 
 		protected virtual void Dispose(bool disposing)
 		{

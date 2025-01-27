@@ -15,6 +15,12 @@ namespace MainWindow
 		public FormMain()
 		{
 			InitializeComponent();
+
+			foreach (var item in FlowGraph.GetNodeTypeNames())
+			{
+				插入节点MenuItem.DropDownItems.Add(item);
+				// TODO: 考虑tag？
+			}
 		}
 
 		private void panel_MouseDown(object sender, MouseEventArgs e)
@@ -70,6 +76,12 @@ namespace MainWindow
 			}
 
 			(e.ClickedItem as ToolStripMenuItem).Checked = true;
+		}
+
+		private void 插入节点MenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+		{
+			_ = FlowGraph.GetNodeType(e.ClickedItem.Text);
+			// TODO: Insert
 		}
 	}
 }

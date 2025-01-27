@@ -291,8 +291,9 @@ namespace MainWindow
 			// 插入节点MenuItem
 			// 
 			this.插入节点MenuItem.Name = "插入节点MenuItem";
-			this.插入节点MenuItem.Size = new System.Drawing.Size(129, 22);
+			this.插入节点MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.插入节点MenuItem.Text = "插入节点*";
+			this.插入节点MenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.插入节点MenuItem_DropDownItemClicked);
 			// 
 			// 子树MenuItem
 			// 
@@ -302,7 +303,7 @@ namespace MainWindow
             this.粘贴ToolStripMenuItem,
             this.删除ToolStripMenuItem});
 			this.子树MenuItem.Name = "子树MenuItem";
-			this.子树MenuItem.Size = new System.Drawing.Size(129, 22);
+			this.子树MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.子树MenuItem.Text = "子树*";
 			// 
 			// 剪切ToolStripMenuItem
