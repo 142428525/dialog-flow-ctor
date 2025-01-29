@@ -33,14 +33,14 @@ namespace MainWindow
 
 			private abstract class NodeInfoBaseGeneric<T> : NodeInfoBase
 			{
-				private readonly Type type = typeof(T);
+				private readonly Type t = typeof(T);
 
 				public override void SetData(object value)
 				{
-					if (value.GetType() != type)
+					if (value.GetType() != t)
 					{
-						throw new InvalidCastException($"Type of {nameof(value)} '{value.GetType()}'" +
-							$" doesn't match storage type '{type}'.");
+						throw new InvalidCastException($"The type of {nameof(value)} '{value.GetType()}' " +
+							$"doesn't match the storage type '{t}'.");
 					}
 
 					storage = value;
