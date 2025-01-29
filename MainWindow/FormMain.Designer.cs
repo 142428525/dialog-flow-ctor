@@ -54,7 +54,7 @@ namespace MainWindow
 			this.退出MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.编辑MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.插入节点MenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.子树MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.子树操作MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.剪切ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.复制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.粘贴ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,6 +63,7 @@ namespace MainWindow
 			this.布局MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.横向MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.纵向MenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.帮助MenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
 			this.toolStripContainer.ContentPanel.SuspendLayout();
 			this.toolStripContainer.TopToolStripPanel.SuspendLayout();
@@ -230,7 +231,8 @@ namespace MainWindow
 			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件MenuItem,
             this.编辑MenuItem,
-            this.查看MenuItem});
+            this.查看MenuItem,
+            this.帮助MenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
 			this.menuStrip.Size = new System.Drawing.Size(800, 25);
@@ -252,82 +254,82 @@ namespace MainWindow
 			// 新建MenuItem
 			// 
 			this.新建MenuItem.Name = "新建MenuItem";
-			this.新建MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.新建MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.新建MenuItem.Text = "新建";
 			// 
 			// 打开MenuItem
 			// 
 			this.打开MenuItem.Name = "打开MenuItem";
-			this.打开MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.打开MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.打开MenuItem.Text = "打开……";
 			// 
 			// 另存为MenuItem
 			// 
 			this.另存为MenuItem.Name = "另存为MenuItem";
-			this.另存为MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.另存为MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.另存为MenuItem.Text = "另存为……";
 			// 
 			// 保存MenuItem
 			// 
 			this.保存MenuItem.Name = "保存MenuItem";
-			this.保存MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.保存MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.保存MenuItem.Text = "保存";
 			// 
 			// 退出MenuItem
 			// 
 			this.退出MenuItem.Name = "退出MenuItem";
-			this.退出MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.退出MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.退出MenuItem.Text = "退出";
 			// 
 			// 编辑MenuItem
 			// 
 			this.编辑MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.插入节点MenuItem,
-            this.子树MenuItem});
+            this.子树操作MenuItem});
 			this.编辑MenuItem.Name = "编辑MenuItem";
-			this.编辑MenuItem.Size = new System.Drawing.Size(44, 21);
-			this.编辑MenuItem.Text = "编辑";
+			this.编辑MenuItem.Size = new System.Drawing.Size(49, 21);
+			this.编辑MenuItem.Text = "编辑*";
 			// 
 			// 插入节点MenuItem
 			// 
 			this.插入节点MenuItem.Name = "插入节点MenuItem";
 			this.插入节点MenuItem.Size = new System.Drawing.Size(180, 22);
-			this.插入节点MenuItem.Text = "插入节点*";
+			this.插入节点MenuItem.Text = "插入节点";
 			this.插入节点MenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.插入节点MenuItem_DropDownItemClicked);
 			// 
-			// 子树MenuItem
+			// 子树操作MenuItem
 			// 
-			this.子树MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.子树操作MenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.剪切ToolStripMenuItem,
             this.复制ToolStripMenuItem,
             this.粘贴ToolStripMenuItem,
             this.删除ToolStripMenuItem});
-			this.子树MenuItem.Name = "子树MenuItem";
-			this.子树MenuItem.Size = new System.Drawing.Size(180, 22);
-			this.子树MenuItem.Text = "子树*";
+			this.子树操作MenuItem.Name = "子树操作MenuItem";
+			this.子树操作MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.子树操作MenuItem.Text = "子树操作";
 			// 
 			// 剪切ToolStripMenuItem
 			// 
 			this.剪切ToolStripMenuItem.Name = "剪切ToolStripMenuItem";
-			this.剪切ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.剪切ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.剪切ToolStripMenuItem.Text = "剪切";
 			// 
 			// 复制ToolStripMenuItem
 			// 
 			this.复制ToolStripMenuItem.Name = "复制ToolStripMenuItem";
-			this.复制ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.复制ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.复制ToolStripMenuItem.Text = "复制";
 			// 
 			// 粘贴ToolStripMenuItem
 			// 
 			this.粘贴ToolStripMenuItem.Name = "粘贴ToolStripMenuItem";
-			this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.粘贴ToolStripMenuItem.Text = "粘贴";
 			// 
 			// 删除ToolStripMenuItem
 			// 
 			this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-			this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+			this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.删除ToolStripMenuItem.Text = "删除";
 			// 
 			// 查看MenuItem
@@ -344,7 +346,7 @@ namespace MainWindow
             this.横向MenuItem,
             this.纵向MenuItem});
 			this.布局MenuItem.Name = "布局MenuItem";
-			this.布局MenuItem.Size = new System.Drawing.Size(100, 22);
+			this.布局MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.布局MenuItem.Text = "布局";
 			this.布局MenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.radio_button_style_click);
 			// 
@@ -361,6 +363,12 @@ namespace MainWindow
 			this.纵向MenuItem.Name = "纵向MenuItem";
 			this.纵向MenuItem.Size = new System.Drawing.Size(100, 22);
 			this.纵向MenuItem.Text = "纵向";
+			// 
+			// 帮助MenuItem
+			// 
+			this.帮助MenuItem.Name = "帮助MenuItem";
+			this.帮助MenuItem.Size = new System.Drawing.Size(44, 21);
+			this.帮助MenuItem.Text = "帮助";
 			// 
 			// FormMain
 			// 
@@ -412,7 +420,7 @@ namespace MainWindow
 		private System.Windows.Forms.ToolStripMenuItem 保存MenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 退出MenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 插入节点MenuItem;
-		private System.Windows.Forms.ToolStripMenuItem 子树MenuItem;
+		private System.Windows.Forms.ToolStripMenuItem 子树操作MenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 布局MenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 横向MenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 纵向MenuItem;
@@ -427,6 +435,7 @@ namespace MainWindow
 		private System.Windows.Forms.ToolStripStatusLabel statusLabelDebugScroll;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
 		private System.Windows.Forms.Panel panelMain;
+		private System.Windows.Forms.ToolStripMenuItem 帮助MenuItem;
 	}
 }
 

@@ -22,88 +22,89 @@ namespace MainWindow
 
 			private abstract class NodeInfoBase
 			{
+				protected dynamic storage;
+
 				public abstract string Name { get; }
 
+				public abstract void SetData(object value);
+
 				public abstract Control Visualize();
-
-				public abstract void SetData(dynamic _);
 			}
 
-			class NodeInfoStart : NodeInfoBase
+			private abstract class NodeInfoBaseGeneric<T> : NodeInfoBase
 			{
-				public override string Name => "起点";
+				private readonly Type type = typeof(T);
 
-				public override Control Visualize()
+				public override void SetData(object value)
 				{
-					throw new NotImplementedException();
-				}
-
-				[Obsolete("This type of node doesn't store data.")]
-#pragma warning disable CS0809 // 过时成员重写未过时成员
-				public override void SetData(dynamic _) => throw new NotImplementedException();
-#pragma warning restore CS0809 // 过时成员重写未过时成员
-			}
-
-			class NodeInfoEnd : NodeInfoBase
-			{
-				public override string Name => "终点";
-				//?
-
-				public override Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public override void SetData(dynamic reserved) => throw new NotImplementedException();
-			}
-
-			class NodeInfoLinear : NodeInfoBase
-			{
-				private string dialogs = "";
-
-				public override string Name => "线性";
-
-				public override Control Visualize()
-				{
-					throw new NotImplementedException();
-				}
-
-				public override void SetData(dynamic data)
-				{
-					if (!(data is string))
+					if (value.GetType() != type)
 					{
-						throw new InvalidCastException($"{nameof(data)} must be a {typeof(string)}");
+						throw new InvalidCastException($"Type of {nameof(value)} '{value.GetType()}'" +
+							$" doesn't match storage type '{type}'.");
 					}
 
-					dialogs = data;
+					storage = value;
 				}
 			}
 
-			class NodeInfoSwitch : NodeInfoBase
+			private abstract class NodeInfoBaseVoid : NodeInfoBase
 			{
-				private List<string> options = new List<string>();
+				sealed public override Control Visualize() => new Label() { Text = "(empty)" };
 
+				sealed public override void SetData(object _)
+				{
+					throw new NotSupportedException("This type of node doesn't store data.");
+				}
+			}
+
+			private class NodeInfoStart : NodeInfoBaseVoid
+			{
+				public override string Name => "起点";
+			}
+
+			private class NodeInfoEnd : NodeInfoBaseGeneric<string>
+			{
+				public override string Name => "终点";
+
+				public override Control Visualize()
+				{
+					throw new NotImplementedException();
+				}
+			}
+
+			private class NodeInfoLinear : NodeInfoBaseGeneric<string>
+			{
+				public override string Name => "线性对话";
+
+				public override Control Visualize()
+				{
+					throw new NotImplementedException();
+				}
+			}
+
+			private class NodeInfoSwitch : NodeInfoBaseGeneric<List<string>>
+			{
 				public override string Name => "选择支";
 
 				public override Control Visualize()
 				{
 					throw new NotImplementedException();
 				}
+			}
 
-				public override void SetData(dynamic data)
+			private class NodeInfoSwitchHidden : NodeInfoBaseGeneric<System.Collections.ArrayList>
+			{
+				public override string Name => "隐藏线";
+
+				public override Control Visualize()
 				{
-					if (!(data is List<string>))
-					{
-						throw new InvalidCastException($"{nameof(data)} must be a {typeof(List<string>)}");
-					}
-
-					options = data;
+					throw new NotImplementedException();
 				}
 			}
 
 			private static readonly Dictionary<Type, NodeInfoBase> refl =
 				(from T in typeof(NodeInfoBase).Assembly.GetTypes()
-				 where T.IsSubclassOf(typeof(NodeInfoBase))
+				 where !T.IsAbstract && T.IsSubclassOf(typeof(NodeInfoBase))
 				 select Activator.CreateInstance(T) as NodeInfoBase)
 				.ToDictionary(item => item.GetType());
 
