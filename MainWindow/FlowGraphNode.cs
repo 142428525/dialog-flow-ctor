@@ -33,18 +33,20 @@ namespace MainWindow
 
 			private abstract class NodeInfoBaseGeneric<T> : NodeInfoBase
 			{
-				private readonly Type t = typeof(T);
-
-				public override void SetData(object value)
+				private Control visualize_impl(T _);
+				
+				sealed public override void SetData(object value)
 				{
-					if (value.GetType() != t)
+					if (!(value is T))
 					{
 						throw new InvalidCastException($"The type of {nameof(value)} '{value.GetType()}' " +
-							$"doesn't match the storage type '{t}'.");
+							$"doesn't match the storage type '{typeof(T)}'.");
 					}
 
 					storage = value;
 				}
+
+				sealed public override Control Visualize() => visualize_impl(new T(storage));
 			}
 
 			private abstract class NodeInfoBaseVoid : NodeInfoBase
@@ -66,7 +68,7 @@ namespace MainWindow
 			{
 				public override string Name => "终点";
 
-				public override Control Visualize()
+				private override Control visualize_impl(string _)
 				{
 					throw new NotImplementedException();
 				}
@@ -76,7 +78,7 @@ namespace MainWindow
 			{
 				public override string Name => "线性对话";
 
-				public override Control Visualize()
+				private override Control visualize_impl(string _)
 				{
 					throw new NotImplementedException();
 				}
@@ -86,7 +88,7 @@ namespace MainWindow
 			{
 				public override string Name => "选择支";
 
-				public override Control Visualize()
+				private override Control visualize_impl(List<string> _)
 				{
 					throw new NotImplementedException();
 				}
@@ -96,7 +98,7 @@ namespace MainWindow
 			{
 				public override string Name => "隐藏线";
 
-				public override Control Visualize()
+				private override Control visualize_impl(System.Collections.ArrayList _)
 				{
 					throw new NotImplementedException();
 				}
