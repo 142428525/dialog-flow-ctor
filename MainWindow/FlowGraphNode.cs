@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainWindow.FlowGraph.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,20 +8,20 @@ using System.Windows.Forms;
 
 namespace MainWindow
 {
-	internal partial class FlowGraph
+	namespace FlowGraph
 	{
-		private partial class AdjacencyList
+		namespace Nodes
 		{
-			public class NodeID
+			internal class NodeID
 			{
 				public long Value { get; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 				private NodeID() { }
 
-				public static NodeID GetID() => new NodeID();
+				public static NodeID New() => new NodeID();
 			}
 
-			private abstract class NodeInfoBase
+			internal abstract class NodeInfoBase
 			{
 				protected dynamic storage;
 
@@ -31,15 +32,15 @@ namespace MainWindow
 				public abstract Control Visualize();
 			}
 
-			private abstract class NodeInfoBaseGeneric<T> : NodeInfoBase
+			internal abstract class NodeInfoBaseGeneric<T> : NodeInfoBase
 			{
 				protected abstract Control visualize_impl(T _);
-				
+
 				sealed public override void SetData(object value)
 				{
 					if (!(value is T))
 					{
-						throw new InvalidCastException($"The type of {nameof(value)} '{value.GetType()}' " +
+						throw new InvalidCastException($"The argument type '{value.GetType()}' " +
 							$"doesn't match the storage type '{typeof(T)}'.");
 					}
 
@@ -49,22 +50,22 @@ namespace MainWindow
 				sealed public override Control Visualize() => visualize_impl(storage);
 			}
 
-			private abstract class NodeInfoBaseVoid : NodeInfoBase
+			internal abstract class NodeInfoBaseVoid : NodeInfoBase
 			{
-				sealed public override Control Visualize() => new Label() { Text = "(empty)" };
-
 				sealed public override void SetData(object _)
 				{
 					throw new NotSupportedException("This type of node doesn't store data.");
 				}
+
+				sealed public override Control Visualize() => new Label() { Text = "(empty)" };
 			}
 
-			private class NodeInfoStart : NodeInfoBaseVoid
+			internal class NodeInfoStart : NodeInfoBaseVoid
 			{
 				public override string Name => "起点";
 			}
 
-			private class NodeInfoEnd : NodeInfoBaseGeneric<string>
+			internal class NodeInfoEnd : NodeInfoBaseGeneric<string>
 			{
 				public override string Name => "终点";
 
@@ -74,7 +75,7 @@ namespace MainWindow
 				}
 			}
 
-			private class NodeInfoLinear : NodeInfoBaseGeneric<string>
+			internal class NodeInfoLinear : NodeInfoBaseGeneric<string>
 			{
 				public override string Name => "线性对话";
 
@@ -84,7 +85,7 @@ namespace MainWindow
 				}
 			}
 
-			private class NodeInfoSwitch : NodeInfoBaseGeneric<List<string>>
+			internal class NodeInfoSwitch : NodeInfoBaseGeneric<List<string>>
 			{
 				public override string Name => "选择支";
 
@@ -94,32 +95,59 @@ namespace MainWindow
 				}
 			}
 
-			private class NodeInfoSwitchHidden : NodeInfoBaseGeneric<System.Collections.ArrayList>
+			internal class NodeInfoSwitchHidden : NodeInfoBaseGeneric<System.Collections.ArrayList>
 			{
-				public override string Name => "隐藏线";
+				public override string Name => "条件支";
 
 				protected override Control visualize_impl(System.Collections.ArrayList _)
 				{
 					throw new NotImplementedException();
 				}
 			}
+		}
 
+		internal static class NodeReflHelper
+		{
 			private static readonly Dictionary<Type, NodeInfoBase> refl =
 				(from T in typeof(NodeInfoBase).Assembly.GetTypes()
 				 where !T.IsAbstract && T.IsSubclassOf(typeof(NodeInfoBase))
-				 select Activator.CreateInstance(T) as NodeInfoBase)
+				 select (Activator.CreateInstance(T) as NodeInfoBase))
 				.ToDictionary(item => item.GetType());
 
 			public static string[] GetNodeTypeNames() => (from item in refl.Values
 														  select item.Name).ToArray();
 
-			public static Type GetNodeType(string name) => (from item in refl.Values
-															where item.Name == name
-															select item.GetType()).Single();
+			public static Type ParseName(string name) => (from item in refl.Values
+														  where item.Name == name
+														  select item.GetType()).Single();
+
+			public static bool Exists(Type t) => refl.ContainsKey(t);
 		}
 
-		public static string[] GetNodeTypeNames() => AdjacencyList.GetNodeTypeNames();  // 转发调用
+		internal struct Node
+		{
+			public readonly NodeID ID;
+			public readonly NodeInfoBase Info;
 
-		public static Type GetNodeType(string name) => AdjacencyList.GetNodeType(name); // 转发调用
+			public Node(NodeID nodeID, NodeInfoBase nodeInfo) : this()
+			{
+				ID = nodeID;
+				Info = nodeInfo;
+			}
+
+			//public Node((NodeID key, NodeInfoBase val) tup) : this()
+			//{
+			//	ID = tup.key;
+			//	Info = tup.val;
+			//}
+
+			public void Deconstruct(out NodeID key, out NodeInfoBase val)
+			{
+				key = ID;
+				val = Info;
+			}
+
+			public (NodeID key, NodeInfoBase val) GetTuple() => (ID, Info);
+		}
 	}
 }

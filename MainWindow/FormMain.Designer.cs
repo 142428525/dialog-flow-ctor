@@ -34,13 +34,12 @@ namespace MainWindow
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.statusLabelDebugMouse = new System.Windows.Forms.ToolStripStatusLabel();
 			this.statusLabelDebugScroll = new System.Windows.Forms.ToolStripStatusLabel();
+			this.statusLabelActive = new System.Windows.Forms.ToolStripStatusLabel();
 			this.panel = new System.Windows.Forms.Panel();
 			this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.panelMain = new System.Windows.Forms.Panel();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.节点插入位置DropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.后方ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.前方ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.线性移动DropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.前移ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +102,8 @@ namespace MainWindow
 			this.statusStrip.Dock = System.Windows.Forms.DockStyle.None;
 			this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabelDebugMouse,
-            this.statusLabelDebugScroll});
+            this.statusLabelDebugScroll,
+            this.statusLabelActive});
 			this.statusStrip.Location = new System.Drawing.Point(0, 0);
 			this.statusStrip.Name = "statusStrip";
 			this.statusStrip.Size = new System.Drawing.Size(800, 22);
@@ -122,6 +122,12 @@ namespace MainWindow
 			this.statusLabelDebugScroll.Size = new System.Drawing.Size(39, 17);
 			this.statusLabelDebugScroll.Text = "scroll";
 			this.statusLabelDebugScroll.Visible = false;
+			// 
+			// statusLabelActive
+			// 
+			this.statusLabelActive.Name = "statusLabelActive";
+			this.statusLabelActive.Size = new System.Drawing.Size(104, 17);
+			this.statusLabelActive.Text = "无选中节点（树）";
 			// 
 			// panel
 			// 
@@ -152,10 +158,12 @@ namespace MainWindow
 			// panelMain
 			// 
 			this.panelMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panelMain.Location = new System.Drawing.Point(33, 33);
 			this.panelMain.Name = "panelMain";
 			this.panelMain.Size = new System.Drawing.Size(741, 455);
 			this.panelMain.TabIndex = 2;
+			this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMain_Paint);
 			this.panelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pass_on_mouse_down);
 			this.panelMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pass_on_mouse_move);
 			// 
@@ -174,27 +182,10 @@ namespace MainWindow
 			// 节点插入位置DropDownButton
 			// 
 			this.节点插入位置DropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.节点插入位置DropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.后方ToolStripMenuItem,
-            this.前方ToolStripMenuItem});
 			this.节点插入位置DropDownButton.Name = "节点插入位置DropDownButton";
 			this.节点插入位置DropDownButton.Size = new System.Drawing.Size(93, 22);
 			this.节点插入位置DropDownButton.Text = "节点插入位置";
 			this.节点插入位置DropDownButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.radio_button_style_click);
-			// 
-			// 后方ToolStripMenuItem
-			// 
-			this.后方ToolStripMenuItem.Checked = true;
-			this.后方ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.后方ToolStripMenuItem.Name = "后方ToolStripMenuItem";
-			this.后方ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-			this.后方ToolStripMenuItem.Text = "后方";
-			// 
-			// 前方ToolStripMenuItem
-			// 
-			this.前方ToolStripMenuItem.Name = "前方ToolStripMenuItem";
-			this.前方ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-			this.前方ToolStripMenuItem.Text = "前方";
 			// 
 			// toolStripSeparator1
 			// 
@@ -254,31 +245,31 @@ namespace MainWindow
 			// 新建MenuItem
 			// 
 			this.新建MenuItem.Name = "新建MenuItem";
-			this.新建MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.新建MenuItem.Size = new System.Drawing.Size(132, 22);
 			this.新建MenuItem.Text = "新建";
 			// 
 			// 打开MenuItem
 			// 
 			this.打开MenuItem.Name = "打开MenuItem";
-			this.打开MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.打开MenuItem.Size = new System.Drawing.Size(132, 22);
 			this.打开MenuItem.Text = "打开……";
 			// 
 			// 另存为MenuItem
 			// 
 			this.另存为MenuItem.Name = "另存为MenuItem";
-			this.另存为MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.另存为MenuItem.Size = new System.Drawing.Size(132, 22);
 			this.另存为MenuItem.Text = "另存为……";
 			// 
 			// 保存MenuItem
 			// 
 			this.保存MenuItem.Name = "保存MenuItem";
-			this.保存MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.保存MenuItem.Size = new System.Drawing.Size(132, 22);
 			this.保存MenuItem.Text = "保存";
 			// 
 			// 退出MenuItem
 			// 
 			this.退出MenuItem.Name = "退出MenuItem";
-			this.退出MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.退出MenuItem.Size = new System.Drawing.Size(132, 22);
 			this.退出MenuItem.Text = "退出";
 			// 
 			// 编辑MenuItem
@@ -293,7 +284,7 @@ namespace MainWindow
 			// 插入节点MenuItem
 			// 
 			this.插入节点MenuItem.Name = "插入节点MenuItem";
-			this.插入节点MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.插入节点MenuItem.Size = new System.Drawing.Size(124, 22);
 			this.插入节点MenuItem.Text = "插入节点";
 			this.插入节点MenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.插入节点MenuItem_DropDownItemClicked);
 			// 
@@ -305,31 +296,31 @@ namespace MainWindow
             this.粘贴ToolStripMenuItem,
             this.删除ToolStripMenuItem});
 			this.子树操作MenuItem.Name = "子树操作MenuItem";
-			this.子树操作MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.子树操作MenuItem.Size = new System.Drawing.Size(124, 22);
 			this.子树操作MenuItem.Text = "子树操作";
 			// 
 			// 剪切ToolStripMenuItem
 			// 
 			this.剪切ToolStripMenuItem.Name = "剪切ToolStripMenuItem";
-			this.剪切ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.剪切ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
 			this.剪切ToolStripMenuItem.Text = "剪切";
 			// 
 			// 复制ToolStripMenuItem
 			// 
 			this.复制ToolStripMenuItem.Name = "复制ToolStripMenuItem";
-			this.复制ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.复制ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
 			this.复制ToolStripMenuItem.Text = "复制";
 			// 
 			// 粘贴ToolStripMenuItem
 			// 
 			this.粘贴ToolStripMenuItem.Name = "粘贴ToolStripMenuItem";
-			this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
 			this.粘贴ToolStripMenuItem.Text = "粘贴";
 			// 
 			// 删除ToolStripMenuItem
 			// 
 			this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-			this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
 			this.删除ToolStripMenuItem.Text = "删除";
 			// 
 			// 查看MenuItem
@@ -346,7 +337,7 @@ namespace MainWindow
             this.横向MenuItem,
             this.纵向MenuItem});
 			this.布局MenuItem.Name = "布局MenuItem";
-			this.布局MenuItem.Size = new System.Drawing.Size(180, 22);
+			this.布局MenuItem.Size = new System.Drawing.Size(100, 22);
 			this.布局MenuItem.Text = "布局";
 			this.布局MenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.radio_button_style_click);
 			// 
@@ -376,6 +367,7 @@ namespace MainWindow
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
 			this.Controls.Add(this.toolStripContainer);
+			this.DoubleBuffered = true;
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "FormMain";
 			this.Text = "对话流制作工具";
@@ -429,13 +421,12 @@ namespace MainWindow
 		private System.Windows.Forms.ToolStripMenuItem 粘贴ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripDropDownButton 节点插入位置DropDownButton;
-		private System.Windows.Forms.ToolStripMenuItem 后方ToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem 前方ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 另存为MenuItem;
 		private System.Windows.Forms.ToolStripStatusLabel statusLabelDebugScroll;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
 		private System.Windows.Forms.Panel panelMain;
 		private System.Windows.Forms.ToolStripMenuItem 帮助MenuItem;
+		private System.Windows.Forms.ToolStripStatusLabel statusLabelActive;
 	}
 }
 

@@ -12,14 +12,36 @@ namespace MainWindow
 {
 	public partial class FormMain : Form
 	{
+		FlowGraph.SceneGraph g = new FlowGraph.SceneGraph();
+
 		public FormMain()
 		{
 			InitializeComponent();
 
-			foreach (var item in FlowGraph.GetNodeTypeNames())
+			// NOTE: 编辑-插入节点、节点插入位置 的子菜单列表为动态生成
+			// NOTE: 主窗体标题会动态变化？
+			// NOTE: 底栏文本框均会动态变化？
+
+
+
+
+
+
+
+
+			foreach (var item in FlowGraph.NodeReflHelper.GetNodeTypeNames())
 			{
 				插入节点MenuItem.DropDownItems.Add(item);
-				// TODO: 考虑tag？
+			}
+
+			foreach (var item in FlowGraph.InsPosReflHelper.GetDescriptions())
+			{
+				var tsi = 节点插入位置DropDownButton.DropDownItems.Add(item);
+
+				if (FlowGraph.InsPosReflHelper.ParseDescription(item) == FlowGraph.InsertPos.Afterward)
+				{
+					(tsi as ToolStripMenuItem).Checked = true;
+				}
 			}
 		}
 
@@ -29,8 +51,11 @@ namespace MainWindow
 			//statusLabelDebugMouse.Text = $"Mouse Down: {e.Location}";
 			//
 
-			DragScrollHelper.OnMouseDown(e);
-			DragScrollHelper.ScrollPos = panel.AutoScrollPosition;
+			if (e.Button == MouseButtons.Left)
+			{
+				DragScrollHelper.OnMouseDown(e);
+				DragScrollHelper.ScrollPos = panel.AutoScrollPosition;
+			}
 		}
 
 		private void panel_MouseMove(object sender, MouseEventArgs e)
@@ -48,7 +73,7 @@ namespace MainWindow
 				//statusLabelDebugScroll.Text = $"{past}, {panel.AutoScrollPosition}";
 				//
 
-				Refresh();
+				//Refresh();
 
 				if (panel.AutoScrollPosition == tmp)
 				{
@@ -80,8 +105,23 @@ namespace MainWindow
 
 		private void 插入节点MenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
 		{
-			_ = FlowGraph.GetNodeType(e.ClickedItem.Text);
-			// TODO: Insert
+			Type t = FlowGraph.NodeReflHelper.ParseName(e.ClickedItem.Text);
+			FlowGraph.InsertPos pos = FlowGraph.InsPosReflHelper.ParseDescription(
+				(from ToolStripMenuItem item in 节点插入位置DropDownButton.DropDownItems
+				 where item.Checked
+				 select item.Text).Single());
+
+			g.InsertNode(t, pos);
+
+			panelMain.Refresh();
+		}
+
+		private void panelMain_Paint(object sender, PaintEventArgs e)
+		{
+			FlowGraph.DrawingHelper drawer = new FlowGraph.DrawingHelper(e);
+			drawer.Draw(g);
+
+			//drawer.Test();
 		}
 	}
 }
