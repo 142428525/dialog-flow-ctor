@@ -126,8 +126,8 @@ namespace MainWindow
 
 		internal struct Node
 		{
-			public readonly NodeID ID;
-			public readonly NodeInfoBase Info;
+			public NodeID ID { get; }
+			public NodeInfoBase Info { get; }
 
 			public Node(NodeID nodeID, NodeInfoBase nodeInfo) : this()
 			{

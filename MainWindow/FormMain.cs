@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainWindow.FlowGraph.Extender;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +13,9 @@ namespace MainWindow
 {
 	public partial class FormMain : Form
 	{
-		FlowGraph.SceneGraph g = new FlowGraph.SceneGraph();
+		//private readonly Font CONSOLAS = FlowGraph.FontFileHelper.Load();
+		private readonly FlowGraph.SceneGraph g = new FlowGraph.SceneGraph();
+		private FlowGraph.DrawnSceneGraph dg_last = null;
 
 		public FormMain()
 		{
@@ -51,16 +54,27 @@ namespace MainWindow
 			//statusLabelDebugMouse.Text = $"Mouse Down: {e.Location}";
 			//
 
-			if (e.Button == MouseButtons.Left)
+			switch (e.Button)
 			{
-				DragScrollHelper.OnMouseDown(e);
-				DragScrollHelper.ScrollPos = panel.AutoScrollPosition;
+				case MouseButtons.Right:
+					DragScrollHelper.OnMouseDown(e);
+					DragScrollHelper.ScrollPos = panel.AutoScrollPosition;
+					break;
+
+				case MouseButtons.Left:
+					if (dg_last == null)
+					{
+						panelMain.Refresh();
+					}
+
+					dg_last.Tracer.OnClick(e);
+					break;
 			}
 		}
 
 		private void panel_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Left)
+			if (e.Button == MouseButtons.Right)
 			{
 				Point mouse_delta = DragScrollHelper.OnMouseDrag(/*e*/);
 				Point past = DragScrollHelper.ScrollPos;
@@ -118,8 +132,8 @@ namespace MainWindow
 
 		private void panelMain_Paint(object sender, PaintEventArgs e)
 		{
-			FlowGraph.DrawingHelper drawer = new FlowGraph.DrawingHelper(e);
-			drawer.Draw(g);
+			FlowGraph.DrawingHelper drawer = new FlowGraph.DrawingHelper(panelMain, e);
+			dg_last = drawer.Draw(g);
 
 			//drawer.Test();
 		}

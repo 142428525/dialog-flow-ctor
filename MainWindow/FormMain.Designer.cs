@@ -145,23 +145,22 @@ namespace MainWindow
 			// flowLayoutPanel
 			// 
 			this.flowLayoutPanel.AutoSize = true;
-			this.flowLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.flowLayoutPanel.Controls.Add(this.panelMain);
 			this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel.Name = "flowLayoutPanel";
 			this.flowLayoutPanel.Padding = new System.Windows.Forms.Padding(30);
-			this.flowLayoutPanel.Size = new System.Drawing.Size(807, 521);
+			this.flowLayoutPanel.Size = new System.Drawing.Size(796, 374);
 			this.flowLayoutPanel.TabIndex = 0;
 			this.flowLayoutPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pass_on_mouse_down);
 			this.flowLayoutPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pass_on_mouse_move);
 			// 
 			// panelMain
 			// 
-			this.panelMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panelMain.Location = new System.Drawing.Point(33, 33);
+			this.panelMain.MinimumSize = new System.Drawing.Size(730, 308);
 			this.panelMain.Name = "panelMain";
-			this.panelMain.Size = new System.Drawing.Size(741, 455);
+			this.panelMain.Size = new System.Drawing.Size(730, 308);
 			this.panelMain.TabIndex = 2;
 			this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMain_Paint);
 			this.panelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pass_on_mouse_down);
@@ -245,31 +244,31 @@ namespace MainWindow
 			// 新建MenuItem
 			// 
 			this.新建MenuItem.Name = "新建MenuItem";
-			this.新建MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.新建MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.新建MenuItem.Text = "新建";
 			// 
 			// 打开MenuItem
 			// 
 			this.打开MenuItem.Name = "打开MenuItem";
-			this.打开MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.打开MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.打开MenuItem.Text = "打开……";
 			// 
 			// 另存为MenuItem
 			// 
 			this.另存为MenuItem.Name = "另存为MenuItem";
-			this.另存为MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.另存为MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.另存为MenuItem.Text = "另存为……";
 			// 
 			// 保存MenuItem
 			// 
 			this.保存MenuItem.Name = "保存MenuItem";
-			this.保存MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.保存MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.保存MenuItem.Text = "保存";
 			// 
 			// 退出MenuItem
 			// 
 			this.退出MenuItem.Name = "退出MenuItem";
-			this.退出MenuItem.Size = new System.Drawing.Size(132, 22);
+			this.退出MenuItem.Size = new System.Drawing.Size(180, 22);
 			this.退出MenuItem.Text = "退出";
 			// 
 			// 编辑MenuItem

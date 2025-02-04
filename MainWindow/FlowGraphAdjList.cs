@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainWindow.FlowGraph.Iter;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,91 @@ namespace MainWindow
 {
 	namespace FlowGraph
 	{
+		namespace Iter
+		{
+			internal class AdjacencyListEnumerator<K, V> : IEnumerator<(K, V)>
+			{
+				private readonly Dictionary<K, HashSet<K>> edges;
+				private readonly Dictionary<K, V> nodes;
+				private readonly K singularity_key;
+
+				private bool invalid_it = true;
+				private K it = default;   // iterator (for private use)
+				private Queue<K> will_visit = new Queue<K>();
+				private HashSet<K> visited = new HashSet<K>();
+
+				public (K, V) Current
+				{
+					get
+					{
+						if (invalid_it)
+						{
+							throw new InvalidOperationException("The iterator hasn't been initialized.");
+						}
+
+						try
+						{
+							return (it, nodes[it]);
+						}
+						catch (Exception)
+						{
+							throw new InvalidOperationException("Invalid iterator position.");
+						}
+					}
+				}
+
+				object IEnumerator.Current => Current;
+
+				private AdjacencyListEnumerator() { }
+
+				public AdjacencyListEnumerator(Dictionary<K, HashSet<K>> edges,
+					Dictionary<K, V> nodes, K singularity_key)
+				{
+					this.edges = edges;
+					this.nodes = nodes;
+					this.singularity_key = singularity_key;
+				}
+
+				public void Dispose()
+				{
+					//throw new NotImplementedException();
+					// do nothing
+				}
+
+				public bool MoveNext()
+				{
+					if (invalid_it)
+					{
+						it = singularity_key;
+						invalid_it = false;
+						return true;
+					}
+
+					visited.Add(it);
+
+					foreach (var node_vec in edges[it])
+					{
+						will_visit.Enqueue(node_vec);
+					}
+
+					if (will_visit.Count == 0)
+					{
+						it = default;
+						return false;
+					}
+
+					it = will_visit.Dequeue();
+					return true;
+				}
+
+				public void Reset()
+				{
+					invalid_it = true;
+					it = default;
+				}
+			}
+		}
+
 		internal class AdjacencyList<K, V> : IEnumerable<(K key, V val)>
 		{
 			private readonly Dictionary<K, HashSet<K>> edges = new Dictionary<K, HashSet<K>>();
@@ -89,88 +175,6 @@ namespace MainWindow
 			IEnumerator IEnumerable.GetEnumerator()
 			{
 				return GetEnumerator();
-			}
-		}
-
-		internal class AdjacencyListEnumerator<K, V> : IEnumerator<(K, V)>
-		{
-			private readonly Dictionary<K, HashSet<K>> edges;
-			private readonly Dictionary<K, V> nodes;
-			private readonly K singularity_key;
-
-			private bool invalid_it = true;
-			private K it = default;   // iterator (for private use)
-			private Queue<K> will_visit = new Queue<K>();
-			private HashSet<K> visited = new HashSet<K>();
-
-			public (K, V) Current
-			{
-				get
-				{
-					if (invalid_it)
-					{
-						throw new InvalidOperationException("The iterator hasn't been initialized.");
-					}
-
-					try
-					{
-						return (it, nodes[it]);
-					}
-					catch (Exception)
-					{
-						throw new InvalidOperationException("Invalid iterator position.");
-					}
-				}
-			}
-
-			object IEnumerator.Current => Current;
-
-			private AdjacencyListEnumerator() { }
-
-			public AdjacencyListEnumerator(Dictionary<K, HashSet<K>> edges,
-				Dictionary<K, V> nodes, K singularity_key)
-			{
-				this.edges = edges;
-				this.nodes = nodes;
-				this.singularity_key = singularity_key;
-			}
-
-			public void Dispose()
-			{
-				//throw new NotImplementedException();
-				// do nothing
-			}
-
-			public bool MoveNext()
-			{
-				if (invalid_it)
-				{
-					it = singularity_key;
-					invalid_it = false;
-					return true;
-				}
-
-				visited.Add(it);
-
-				foreach (var node_vec in edges[it])
-				{
-					will_visit.Enqueue(node_vec);
-				}
-
-				if (will_visit.Count == 0)
-				{
-					it = default;
-					return false;
-				}
-
-				it = will_visit.Dequeue();
-				return true;
-			}
-
-			public void Reset()
-			{
-				invalid_it = true;
-				it = default;
 			}
 		}
 

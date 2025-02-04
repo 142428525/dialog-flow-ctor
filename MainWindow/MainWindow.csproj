@@ -49,6 +49,7 @@
     <Compile Include="DragScrollHelper.cs" />
     <Compile Include="FlowGraphAdjList.cs" />
     <Compile Include="FlowGraphDrawing.cs" />
+    <Compile Include="FlowGraphExtender.cs" />
     <Compile Include="FlowGraphNode.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
