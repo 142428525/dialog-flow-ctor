@@ -36,7 +36,7 @@ namespace MainWindow
 			{
 				protected abstract Control visualize_impl(T _);
 
-				sealed public override void SetData(object value)
+				public sealed override void SetData(object value)
 				{
 					if (!(value is T))
 					{
@@ -47,17 +47,17 @@ namespace MainWindow
 					storage = value;
 				}
 
-				sealed public override Control Visualize() => visualize_impl(storage);
+				public sealed override Control Visualize() => visualize_impl(storage);
 			}
 
 			internal abstract class NodeInfoBaseVoid : NodeInfoBase
 			{
-				sealed public override void SetData(object _)
+				public sealed override void SetData(object _)
 				{
 					throw new NotSupportedException("This type of node doesn't store data.");
 				}
 
-				sealed public override Control Visualize() => new Label() { Text = "(empty)" };
+				public sealed override Control Visualize() => null;
 			}
 
 			internal class NodeInfoStart : NodeInfoBaseVoid
@@ -71,7 +71,7 @@ namespace MainWindow
 
 				protected override Control visualize_impl(string _)
 				{
-					throw new NotImplementedException();
+					return new Label() { Text = _ };
 				}
 			}
 
@@ -148,6 +148,11 @@ namespace MainWindow
 			}
 
 			public (NodeID key, NodeInfoBase val) GetTuple() => (ID, Info);
+
+			public override string ToString()
+			{
+				return $"{Info.Name}#{ID.Value}";
+			}
 		}
 	}
 }

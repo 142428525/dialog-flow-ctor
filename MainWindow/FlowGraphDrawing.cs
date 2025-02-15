@@ -110,14 +110,23 @@ namespace MainWindow
 						  let rect = new RectangleF(kv.Value, kv.Key.Size)
 						  where rect.Contains(e.Location)
 						  select kv.Key;
-				DrawnNode dnode = null;
 
-				if (tmp.Count() > 0)
+				if (tmp.Count() == 0)
 				{
-					dnode = tmp.Single();
+					return;
 				}
 
-				MessageBox.Show($"{dnode?.LogicNode.ID.Value ?? -1}, {dnode?.LogicNode.Info.Name ?? "(empty)"}");
+				DrawnNode dnode = tmp.Single();
+
+				//
+				//MessageBox.Show($"{dnode.LogicNode.ID.Value}");
+				//
+
+				Control c = dnode.LogicNode.Info.Visualize();
+				if (c != null)
+				{
+					new FormVisualizer(c, dnode.LogicNode.ToString()).ShowDialog();
+				}
 			}
 		}
 
